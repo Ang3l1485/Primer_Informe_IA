@@ -126,4 +126,3 @@ if solution:
     print("Solution path:", path)
 else:
     print("No solution found")
-
