@@ -20,12 +20,12 @@ def expand(problem, node):
     # Completar con la expansión del nodo
 
 class Problem: #DEFINICION DEL PROBLEMA
-    def __init__(self, initial, goal, actions, result, action_cost, is_goal):
+    def __init__(self, initial, goal, actions, result, action_cost,is_goal):
         self.initial = initial #Estado inicial
         self.goal = goal #Estado objetivo
         self.actions = actions #acciones disponibles desde un estado.
         self.result = result  #estado resultante de aplicar una acción
-        self.action_cost = action_cost #costo de una acción
+        self.action_cost = action_cost  #costo de una acción
         self.is_goal = is_goal #verificación de si el estado es el estado objetivo
         
 def best_first_search(problem, f):
@@ -51,6 +51,9 @@ def best_first_search(problem, f):
 def result(state, action):
     return action
 
+def heuristic(state):
+    return heuristic_costs.get(state)  #Devuelve el costo heurístico del estado
+
 def action_cost(state, action, result):
     return action_costs.get((state, action), float('inf'))#En el caso de que no se encuentre un costo, el valor sera infinito
 
@@ -58,7 +61,7 @@ def is_goal(state):
     return state == goal
 
 def f(node):
-    return node.path_cost #costo del camino desde el estado inicial hasta el nodo actual.
+    return node.path_cost + heuristic(node.state)  #costo del camino desde el estado inicial hasta el nodo actual.
 
 initial = 'Arad'
 goal = 'Bucharest'
@@ -112,6 +115,29 @@ action_costs = {
     ('Hirsova', 'Eforie'): 86,
     ('Vaslui', 'Iasi'): 92,
     ('Iasi', 'Neamt'): 87
+}
+
+heuristic_costs = {
+    'Arad': 366,
+    'Sibiu': 253,
+    'Timisoara': 329,
+    'Zerind': 374,
+    'Fagaras': 176,
+    'Rimnicu Vilcea': 193,
+    'Lugoj': 244,
+    'Oradea': 380,
+    'Pitesti': 100,
+    'Craiova': 160,
+    'Mehadia': 241,
+    'Drobeta': 242,
+    'Bucharest': 0, #Estado objetivo
+    'Giurgiu': 77,
+    'Urziceni': 80,
+    'Hirsova': 151,
+    'Eforie': 161,
+    'Vaslui': 199,
+    'Iasi': 226,
+    'Neamt': 234
 }
 
 problem = Problem(initial, goal, lambda s: actions.get(s, []), result, action_cost, is_goal)
