@@ -1,6 +1,7 @@
 # Ejercicio de las estaciones del metro utilizando el algoritmo BFS (Best-First Search)
 import heapq #El módulo heapq para implementar colas de prioridad (heaps)
-
+import tracemalloc
+from time import perf_counter
 #Definimos las estaciones cómo nodos
 
 class Node: #definición de clase node
@@ -83,7 +84,7 @@ def Expand(nodo, problem):
 def best_first_search(problem, f):
      Nodo = Node(state=problem.initial)  # Crea el nodo raíz con el estado inicial del problema.
      frontera = [(f(Nodo), Nodo)]
-     heapq.heappush(frontera, (f(Nodo), Nodo))
+     heapq.heapify(frontera)
      buscados= {Nodo.state: Nodo}
 
      while frontera:
@@ -98,11 +99,15 @@ def best_first_search(problem, f):
                     heapq.heappush(frontera, (f(hijo), hijo))  # Añade el nodo hijo a la frontera
 
      return None  # No se encontró solución
-
+tracemalloc.start()
+t0 = perf_counter()
 
 problem = Problem(Initial, goal, lambda s: Actions[s], result, action_cost, is_goal)
 solucion = best_first_search(problem, f)
 
+elapsed_ms = (perf_counter() - t0) * 1000
+current, peak = tracemalloc.get_traced_memory()
+tracemalloc.stop()
 
 if solucion:
     path = []
@@ -113,5 +118,8 @@ if solucion:
     print("Solution path:", path)
 else:
     print("No solution found")
+
+print(f"Tiempo gastado: {elapsed_ms:.3f}")
+print(f"Memoria usada: {peak/1024:.1f}")
 
 
