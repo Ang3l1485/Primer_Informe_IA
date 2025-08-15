@@ -3,7 +3,7 @@ import time
 import tracemalloc
 
 class Node:
-    def _init_(self, state, parent=None, depth=0):
+    def __init__(self, state, parent=None, depth=0):
         self.state = state
         self.parent = parent
         self.depth = depth
@@ -76,41 +76,40 @@ def reconstruct_path(node):
         node = node.parent
     return list(reversed(path))
 
-if __name__ == "_main_":
-    graph = {
-        'A': ['B', 'C'],
-        'B': ['A', 'D', 'E'],
-        'C': ['A', 'F'],
-        'D': ['B', 'G'],
-        'E': ['B', 'H', 'I'],
-        'F': ['C', 'J'],
-        'G': ['D'],
-        'H': ['E'],
-        'I': ['E', 'J'],
-        'J': ['F', 'I'],
-    }
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D', 'E'],
+    'C': ['A', 'F'],
+    'D': ['B', 'G'],
+    'E': ['B', 'H', 'I'],
+    'F': ['C', 'J'],
+    'G': ['D'],
+    'H': ['E'],
+    'I': ['E', 'J'],
+    'J': ['F', 'I'],
+}
 
-    START = 'A'
-    GOAL = 'J'
+START = 'A'
+GOAL = 'J'
 
-    tracemalloc.start()
-    t0 = time.perf_counter()
-    sol = iterative_deepening_search(graph, START, GOAL, max_depth=50)
-    t1 = time.perf_counter()
-    current, peak = tracemalloc.get_traced_memory()
-    tracemalloc.stop()
+tracemalloc.start()
+t0 = time.perf_counter()
+sol = iterative_deepening_search(graph, START, GOAL, max_depth=50)
+t1 = time.perf_counter()
+current, peak = tracemalloc.get_traced_memory()
+tracemalloc.stop()
 
-    if isinstance(sol, Node):
-        path = reconstruct_path(sol)
-        print("Algorithm: IDS")
-        print("Start:", START, "Goal:", GOAL)
-        print("Solution path:", path)
-        print("Steps:", len(path) - 1)
-        print("Execution time (s):", round(t1 - t0, 6))
-        print("Peak memory (KiB):", round(peak / 1024, 3))
-    else:
-        print("Algorithm: IDS")
-        print("Start:", START, "Goal:", GOAL)
-        print("Result:", sol)
-        print("Execution time (s):", round(t1 - t0, 6))
-        print("Peak memory (KiB):", round(peak / 1024, 3))
+if isinstance(sol, Node):
+    path = reconstruct_path(sol)
+    print("Algorithm: IDS")
+    print("Start:", START, "Goal:", GOAL)
+    print("Solution path:", path)
+    print("Steps:", len(path) - 1)
+    print("Execution time (s):", round(t1 - t0, 6))
+    print("Peak memory (KiB):", round(peak / 1024, 3))
+else:
+    print("Algorithm: IDS")
+    print("Start:", START, "Goal:", GOAL)
+    print("Result:", sol)
+    print("Execution time (s):", round(t1 - t0, 6))
+    print("Peak memory (KiB):", round(peak / 1024, 3))

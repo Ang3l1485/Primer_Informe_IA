@@ -17,7 +17,7 @@ Costo de la Acción: La distancia (costo) real de la carretera entre dos ciudade
 El objetivo es encontrar una secuencia de ciudades (un camino) desde Arad hasta Bucharest tal que la suma de los costos de los tramos individuales sea la mínima posible.
 
 
-## **Aplicación del algoritmo A* (A* Search)**
+## **Aplicación del algoritmo A * (A * Search)**
 
 El algoritmo A* Search es una extensión del Best-First Search y evalúa los nodos combinando el costo para llegar al nodo y una estimación del costo restante hasta el objetivo.
 
@@ -51,10 +51,10 @@ Si introdujeras diferentes costos para atravesar diferentes tipos de terreno (po
 
 Actualmente, el algoritmo está diseñado con un único estado objetivo (la salida 'E') que se detecta al inicio. Si el laberinto tuviera múltiples salidas, el programa solo encontraría la primera que identifique y no sería consciente de las demás.
 
-Para manejar múltiples salidas, podrías implementar las siguientes modificaciones[cite: 54, 55]:
+Para manejar múltiples salidas, se podría implementar las siguientes modificaciones[cite: 54, 55]:
 
-* [cite_start]**Definir Múltiples Objetivos:** En lugar de un único `goal_state`, define una lista o conjunto con las coordenadas de todas las salidas posibles[cite: 54, 55].
-* [cite_start]**Actualizar la Verificación del Objetivo:** Modifica la condición de parada del bucle principal para comprobar si el estado actual está presente en el conjunto de estados objetivo[cite: 54, 55].
+* **Definir Múltiples Objetivos:** En lugar de un único `goal_state`, define una lista o conjunto con las coordenadas de todas las salidas posibles.
+* **Actualizar la Verificación del Objetivo:** Modifica la condición de parada del bucle principal para comprobar si el estado actual está presente en el conjunto de estados objetivo.
 * **Ajustar la Heurística:** La función heurística (por ejemplo, la distancia de Manhattan) debe actualizarse para calcular la distancia a la salida *más cercana* desde la posición actual. Esto asegura que la heurística siga siendo admisible (nunca sobreestima el costo real), lo cual es crucial para que A\* garantice encontrar el camino óptimo.
 
 Con estos cambios, el algoritmo encontraría de manera eficiente el camino óptimo hacia la salida que sea más cercana o más barata de alcanzar desde el punto de partida.
@@ -63,7 +63,7 @@ Con estos cambios, el algoritmo encontraría de manera eficiente el camino ópti
 
 ## **Modifica el laberinto y encuentra una limitación en el algoritmo.**
 
-[cite_start]Aquí tienes un ejemplo de un laberinto más grande con un nuevo obstáculo, 'W' para "Agua", que es transitable pero tiene un costo de movimiento mayor (por ejemplo, un costo de 3)[cite: 55].
+Aquí tienes un ejemplo de un laberinto más grande con un nuevo obstáculo, 'W' para "Agua", que es transitable pero tiene un costo de movimiento mayor (por ejemplo, un costo de 3)[cite: 55].
 
 ```python
 # Laberinto modificado con un nuevo obstáculo 'W' (Agua)
@@ -74,3 +74,42 @@ large_maze = [
     ["#", " ", "#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
     ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
 ]
+
+# Ejercicio #3
+
+## **Comparación de Resultados**
+
+Al ejecutar ambos algoritmos para encontrar la ruta de la **Estación A** a la **Estación J**, ambos encuentran la misma ruta óptima. Sin embargo, los datos de rendimiento que proporcionaste revelan las diferencias clave en su eficiencia.
+
+| Métrica | Breadth-First Search (BFS) | Iterative Deepening Search (IDS) |
+| :--- | :--- | :--- |
+| **Ruta de Solución** | `['A', 'C', 'F', 'J']` | `['A', 'C', 'F', 'J']` |
+| **Pasos** | 3 | 3 |
+| **Tiempo de Ejecución**| 0.076 ms | **0.068 ms** |
+| **Memoria Pico** | 6.1 KiB | **3.523 KiB** |
+
+**Observación Clave:** Los resultados confirman la teoría. **IDS utiliza significativamente menos memoria** (casi la mitad) que BFS. Aunque teóricamente IDS suele ser un poco más lento por re-explorar nodos, en este caso específico y con un grafo tan pequeño, ha resultado ser marginalmente más rápido. Esto puede deberse a la eficiencia de la implementación o al bajo costo de la re-exploración en este escenario.
+
+---
+
+### **Explicación de las Diferencias Encontradas**
+
+Las diferencias en rendimiento se deben a la estrategia fundamental de cada algoritmo para explorar el grafo de estaciones.
+
+#### **Breadth-First Search (BFS) **
+
+BFS explora la red "capa por capa", asegurando encontrar la ruta más corta.
+
+* **Estrategia:** Empieza en A, luego visita a todos sus vecinos (B, C), luego a los vecinos de estos (D, E, F), y así sucesivamente. Para lograrlo, debe mantener una lista (la "frontera") de todas las estaciones que ha descubierto pero cuyos vecinos aún no ha explorado.
+* **Ventaja - Tiempo:** Es muy eficiente en tiempo porque visita cada estación una sola vez.
+* **Desventaja - Memoria:** Su gran debilidad es la memoria. La "frontera" de nodos puede crecer exponencialmente. En tu ejecución, necesitó **6.1 KiB** para almacenar estas listas, lo cual es considerablemente más que IDS. Para un mapa de metro con miles de estaciones, BFS podría agotar la memoria del sistema.
+
+#### **Iterative Deepening Search (IDS) 💡**
+
+IDS combina lo mejor de la búsqueda en profundidad (bajo uso de memoria) y la búsqueda en anchura (encontrar la ruta más corta).
+
+* **Estrategia:** Realiza múltiples búsquedas en profundidad con un límite que va incrementando: primero busca rutas de 1 paso, luego de 2, y finalmente de 3 pasos, donde encuentra la solución.
+* **Ventaja - Memoria:** ¡Su punto fuerte es el ahorro de memoria! Solo necesita recordar la ruta actual que está explorando (ej: A -> C -> F). Como demostró tu ejecución, solo necesitó **3.523 KiB**. Esta característica lo hace ideal para problemas con un espacio de estados enorme.
+* **Desventaja - Tiempo:** Su debilidad teórica es que re-explora los nodos de niveles superiores en cada nueva iteración. Por ejemplo, para buscar a profundidad 3, vuelve a recorrer las rutas de profundidad 1 y 2. Aunque esto lo hace potencialmente más lento, tus resultados muestran que para este problema tan pequeño, este costo fue insignificante e incluso resultó ser un poco más rápido.
+
+
