@@ -68,26 +68,26 @@ goal = 'Bucharest'
 
 actions = {
     # Completar con las acciones disponibles desde cada estado
-    'Arad': ['Sibiu', 'Timisoara', 'Zerind'],
-        'Sibiu': ['Arad', 'Fagaras', 'Rimnicu Vilcea'],
-        'Timisoara': ['Arad', 'Lugoj'],
-        'Zerind': ['Arad', 'Oradea'],
-        'Fagaras': ['Sibiu', 'Bucharest'],
-        'Rimnicu Vilcea': ['Sibiu', 'Pitesti', 'Craiova'],
-        'Lugoj': ['Timisoara', 'Mehadia'],
-        'Oradea': ['Zerind', 'Sibiu'],
-        'Pitesti': ['Rimnicu Vilcea', 'Bucharest'],
-        'Craiova': ['Rimnicu Vilcea', 'Drobeta', 'Pitesti'],
-        'Mehadia': ['Lugoj', 'Drobeta'],
-        'Drobeta': ['Mehadia', 'Craiova'],
-        'Bucharest': ['Fagaras', 'Pitesti', 'Urziceni', 'Giurgiu'],
-        'Giurgiu': ['Bucharest'],
-        'Urziceni': ['Bucharest', 'Hirsova', 'Vaslui'],
-        'Hirsova': ['Urziceni', 'Eforie'],
-        'Eforie': ['Hirsova'],
-        'Vaslui': ['Urziceni', 'Iasi'],
-        'Iasi': ['Vaslui', 'Neamt'],
-        'Neamt': ['Iasi']
+    'Arad': ['Zerind', 'Sibiu', 'Timisoara'],
+    'Zerind': ['Oradea'],
+    'Oradea': ['Sibiu'],
+    'Sibiu': ['Fagaras', 'Rimnicu Vilcea'],
+    'Fagaras': ['Bucharest'],
+    'Rimnicu Vilcea': ['Pitesti', 'Craiova'],
+    'Pitesti': ['Bucharest'],
+    'Craiova': ['Drobeta', 'Pitesti'],
+    'Timisoara': ['Lugoj'],
+    'Lugoj': ['Mehadia'],
+    'Mehadia': ['Drobeta'],
+    'Drobeta': ['Craiova'],
+    'Bucharest': ['Giurgiu', 'Urziceni'],
+    'Giurgiu': [],
+    'Urziceni': ['Hirsova', 'Vaslui'],
+    'Hirsova': ['Eforie'],
+    'Eforie': [],
+    'Vaslui': ['Iasi'],
+    'Iasi': ['Neamt'],
+    'Neamt': []
 }
 
 
@@ -140,7 +140,7 @@ heuristic_costs = {
     'Neamt': 234
 }
 
-problem = Problem(initial, goal, lambda s: actions.get(s, []), result, action_cost, is_goal)
+problem = Problem(initial, goal, lambda s: actions[s], result, action_cost, is_goal)
 solution = best_first_search(problem, f)#Resultado del algoritmo best_first_search aplicado al problema definido.
 
 if solution:
