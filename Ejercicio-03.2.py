@@ -76,7 +76,7 @@ def reconstruct_path(node):
         node = node.parent
     return list(reversed(path))
 
-if _name_ == "_main_":
+if __name__ == "_main_":
     graph = {
         'A': ['B', 'C'],
         'B': ['A', 'D', 'E'],
