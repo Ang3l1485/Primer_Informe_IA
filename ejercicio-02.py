@@ -1,5 +1,4 @@
 import heapq #El módulo heapq implementa colas de prioridad (heaps)
-     
 
 class Node:
     """
