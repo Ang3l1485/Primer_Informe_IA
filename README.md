@@ -17,7 +17,7 @@ Costo de la Acción: La distancia (costo) real de la carretera entre dos ciudade
 El objetivo es encontrar una secuencia de ciudades (un camino) desde Arad hasta Bucharest tal que la suma de los costos de los tramos individuales sea la mínima posible.
 
 
-## **Aplicación del algoritmo A * (A * Search)**
+## **Aplicación del algoritmo A\* (A\* Search)**
 
 El algoritmo A* Search es una extensión del Best-First Search y evalúa los nodos combinando el costo para llegar al nodo y una estimación del costo restante hasta el objetivo.
 
@@ -41,7 +41,7 @@ Como A* siempre expande el nodo con el valor f(n) más bajo, y nuestra h(n) es a
 
 Cambiar la función de costo altera fundamentalmente la definición del "mejor" camino. El algoritmo actual, A\*, busca encontrar la ruta con el costo total más bajo.
 
-En el código proporcionado, cada movimiento (Arriba, Abajo, Izquierda, Derecha) tiene un costo uniforme de **1**[cite: 60]. Esto significa que el algoritmo encuentra el **camino más corto** en términos del número de pasos.
+En el código proporcionado, cada movimiento (Arriba, Abajo, Izquierda, Derecha) tiene un costo uniforme de **1**. Esto significa que el algoritmo encuentra el **camino más corto** en términos del número de pasos.
 
 Si introdujeras diferentes costos para atravesar diferentes tipos de terreno (por ejemplo, moverse a través de una celda de "agua" cuesta 3, mientras que una celda de "camino" cuesta 1), el comportamiento del algoritmo cambiaría. En lugar de simplemente encontrar el camino con la menor cantidad de celdas, priorizaría rutas que, aunque potencialmente más largas en distancia, tuvieran un costo acumulado menor. El algoritmo favorecería los caminos con más celdas de "camino", incluso si eso significara tomar una ruta más larga para evitar las celdas de "agua" de mayor costo.
 
@@ -51,7 +51,7 @@ Si introdujeras diferentes costos para atravesar diferentes tipos de terreno (po
 
 Actualmente, el algoritmo está diseñado con un único estado objetivo (la salida 'E') que se detecta al inicio. Si el laberinto tuviera múltiples salidas, el programa solo encontraría la primera que identifique y no sería consciente de las demás.
 
-Para manejar múltiples salidas, se podría implementar las siguientes modificaciones[cite: 54, 55]:
+Para manejar múltiples salidas, se podría implementar las siguientes modificaciones:
 
 * **Definir Múltiples Objetivos:** En lugar de un único `goal_state`, define una lista o conjunto con las coordenadas de todas las salidas posibles.
 * **Actualizar la Verificación del Objetivo:** Modifica la condición de parada del bucle principal para comprobar si el estado actual está presente en el conjunto de estados objetivo.
@@ -63,7 +63,7 @@ Con estos cambios, el algoritmo encontraría de manera eficiente el camino ópti
 
 ## **Modifica el laberinto y encuentra una limitación en el algoritmo.**
 
-Aquí tienes un ejemplo de un laberinto más grande con un nuevo obstáculo, 'W' para "Agua", que es transitable pero tiene un costo de movimiento mayor (por ejemplo, un costo de 3)[cite: 55].
+El siguiente ejemplo muestra un laberinto diferente. 'W' para "Agua", que es transitable pero tiene un costo de movimiento mayor (por ejemplo, un costo de 3).
 
 ```python
 # Laberinto modificado con un nuevo obstáculo 'W' (Agua)
@@ -74,6 +74,8 @@ large_maze = [
     ["#", " ", "#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
     ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
 ]
+```
+El principal limitante del algoritmo A\* proporcionado es que asume un costo uniforme para cada movimiento. La línea new_cost = current_node.path_cost + 1 fija un costo de movimiento de 1 para cualquier casilla válida, lo que lo hace incapaz de calcular correctamente el costo del camino cuando se introducen terrenos con diferentes costos, como el agua ('W'). El algoritmo encontrará el camino con menos pasos, pero no necesariamente el de menor costo real.
 
 # Ejercicio #3
 
